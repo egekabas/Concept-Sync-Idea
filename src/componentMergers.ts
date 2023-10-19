@@ -1,9 +1,17 @@
 import { Concept } from "./types";
 
-function extractActions<T extends Concept>(obj: T): T {
-  return Object.keys(obj).reduce((o, key) => {
-    return { ...obj, [key]: (...args: any[]) => (obj as any)[key](...args) };
-  }, {}) as T;
+function getInstanceMethodNames(obj: any) {
+  return Object.getOwnPropertyNames(Object.getPrototypeOf(obj)).filter(
+    (name) => name !== "constructor" && typeof obj[name] === "function",
+  );
+}
+
+export function extractActions<T extends Concept>(obj: T): T {
+  const ret: any = {};
+  for (const key of getInstanceMethodNames(obj)) {
+    ret[key] = (...args: any[]) => (obj as any)[key](...args);
+  }
+  return ret as T;
 }
 
 export function mergeConcepts<T extends Concept, U extends Concept>(

@@ -33,6 +33,9 @@ class MovieConcept implements CRD<MovieDoc> {
   delete(id: number): void {
     this.db.delete(id);
   }
+  printAll() {
+    console.log(this.db);
+  }
 }
 
 type GenreDoc = { genre: string };
@@ -101,4 +104,13 @@ const movieId = movieWithGenre.create(
   },
 );
 
+movieWithGenre.create(
+  {
+    name: "The Matrix Reloaded",
+    year: 2003,
+  },
+  { genre: "Sci-Fi" },
+);
+
 console.log(movieWithGenre.read(movieId));
+movieWithGenre.printAll();
